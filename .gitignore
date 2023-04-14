@@ -127,3 +127,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+account.csv
+account.*.csv
+
+# Ignore config files except config.test.json and config.sample.json
+config.json
+config.*.json
+!config.test.json
+!config.sample.json
+
+.idea
+tmp/
+log/
