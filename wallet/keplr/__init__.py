@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import undetected_chromedriver as uc
+from webdriver_manager.chrome import ChromeDriverManager
 
 from app import utils
 from app.config import get_logger, DRIVER_PATH, PASSWORD, CODE_HOME, WIDTH, HEADLESS
@@ -11,8 +12,8 @@ from app.config import get_logger, DRIVER_PATH, PASSWORD, CODE_HOME, WIDTH, HEAD
 logger = get_logger(__name__)
 
 
-EXTENSION_PATH = f'{CODE_HOME}/wallets/keplr/keplr-extension-v0.11.56.crx'
-EXTENSION_DIR = f'{CODE_HOME}/wallets/keplr/keplr-extension-v0.11.56'
+EXTENSION_PATH = f'{CODE_HOME}/extension/keplr-extension-v0.11.56.crx'
+EXTENSION_DIR = f'{CODE_HOME}/extension/keplr-extension-v0.11.56'
 EXTENSION_ID = 'fceplelmabealiiholccmbakhhcailnl'
 # EXT_URL = f"chrome-extension://fceplelmabealiiholccmbakhhcailnl/popup.html#/register"
 EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
@@ -35,8 +36,9 @@ def launchSeleniumWebdriver() -> webdriver:
         logger.info('headless mode')
         options.add_argument('--headless')
 
+    driver_executable_path = ChromeDriverManager().install()
     global driver
-    driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
+    driver = uc.Chrome(options=options, executable_path=driver_executable_path)
 
     if WIDTH:
         driver.set_window_size(WIDTH, 1020)
