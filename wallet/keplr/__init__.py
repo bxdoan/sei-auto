@@ -18,16 +18,13 @@ EXTENSION_DIR = f'{CODE_HOME}/wallets/keplr/keplr-extension-v0.11.56'
 EXTENSION_ID = 'fceplelmabealiiholccmbakhhcailnl'
 # EXT_URL = f"chrome-extension://fceplelmabealiiholccmbakhhcailnl/popup.html#/register"
 EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
-POPUP_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
-CHAIN_NAME = 'Sei atlantic-2'
+CHAIN_ID = 'atlantic-2'
+CHAIN_NAME = f'Sei {CHAIN_ID}'
 FILE_NAME = f"{CODE_HOME}/account.sei.csv"
 
 
-def launchSeleniumWebdriver(use_uc=False) -> webdriver:
-    if use_uc:
-        options = uc.ChromeOptions()
-    else:
-        options = Options()
+def launchSeleniumWebdriver() -> webdriver:
+    options = uc.ChromeOptions()
 
     options.add_argument(f"--load-extension={EXTENSION_DIR}")
     prefs = {
@@ -41,10 +38,7 @@ def launchSeleniumWebdriver(use_uc=False) -> webdriver:
         options.add_argument('--headless')
 
     global driver
-    if use_uc:
-        driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
-    else:
-        driver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
+    driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
 
     if WIDTH:
         driver.set_window_size(WIDTH, 1020)
