@@ -7,8 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import undetected_chromedriver as uc
 
-from app_auto import utils
-from app_auto.config import get_logger, DRIVER_PATH, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EMAILCLONE_PREFIX
+from app import utils
+from app.config import get_logger, DRIVER_PATH, PASSWORD, CODE_HOME, WIDTH, HEADLESS
 
 logger = get_logger(__name__)
 
@@ -134,7 +134,7 @@ def process_acc(idx):
 
         mnemonic = driver.find_element(By.XPATH, "//*[@id='app']/div/div[3]/div/form/div[1]").text
 
-        insert_text("//input[@name='name']", f"{EMAILCLONE_PREFIX}{idx}")
+        insert_text("//input[@name='name']", f"don{idx}")
 
         insert_text("//input[@name='password']", PASSWORD)
         insert_text("//input[@name='confirmPassword']", PASSWORD)
