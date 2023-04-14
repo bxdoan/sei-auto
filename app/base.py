@@ -81,7 +81,7 @@ class BaseAuto(object):
         logger.info(f"file report: {self.file_report}")
 
 
-class SeiAuto(BaseAuto):
+class KeplrAuto(BaseAuto):
 
     def __init__(self, **kwargs):
         super().__init__()
