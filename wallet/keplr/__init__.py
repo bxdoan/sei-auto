@@ -1,8 +1,6 @@
+import time
 import pandas as pd
 from selenium import webdriver
-import time
-from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import undetected_chromedriver as uc

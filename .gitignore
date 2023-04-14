@@ -130,6 +130,7 @@ dmypy.json
 
 account.csv
 account.*.csv
+!account.sample.csv
 
 # Ignore config files except config.test.json and config.sample.json
 config.json
