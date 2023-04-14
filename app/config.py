@@ -33,27 +33,6 @@ PASSWORD = os.environ.get('PASSWORD')
 HEADLESS = os.environ.get('HEADLESS')
 WIDTH = os.environ.get('WIDTH')
 
-def get_config():
-    # create config parser
-    _builder = ConfigBuilder()
-
-    # parse config
-    config_file_path = os.environ.get('CONFIG_FILE_PATH')
-    if not config_file_path:
-        raise Exception(f'Invalid config file path [{config_file_path}]')
-
-    if not os.path.exists(config_file_path):
-        # append to project home path
-        config_file_path = os.path.join(os.path.dirname(__file__), os.pardir, config_file_path)
-
-    if not os.path.exists(config_file_path):
-        raise Exception(f'Invalid config file path [{config_file_path}]')
-
-    _config = _builder.parse_config(config_file_path)
-
-    return _config
-
-
 def get_logger(name):
     log = logging.getLogger(name)
     log.setLevel("DEBUG")
@@ -77,4 +56,3 @@ def get_logger(name):
 
 # Use this variable for global project
 logger = get_logger(__name__)
-config = get_config()
