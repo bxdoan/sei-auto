@@ -89,7 +89,7 @@ def walletSetup(recoveryPhrase : 'str', password : str) -> None:
     time.sleep(2)
     click('//button[text()="Next"]', 2)
 
-    click('//button[text()="Done"]', 2)
+    click('//button[text()="Done"]', 5)
 
     switch_to_window(0)
     time.sleep(2)
@@ -174,9 +174,14 @@ def switch_to_window(window_number):
 
 
 def approve():
+    time.sleep(3)
+    switch_to_window(-1)
     try:
-        time.sleep(3)
-        switch_to_window(-1)
+        click("//div[text()='Low']")
+    except:
+        pass
+
+    try:
         click("//button[text()='Approve']", 5)
     except:
         pass
