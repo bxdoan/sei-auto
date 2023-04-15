@@ -21,12 +21,11 @@ ACC_PATH = os.environ.get('ACC_PATH')
 ACC_SEI_PATH = os.environ.get('ACC_SEI_PATH')
 try:
     ACC_PATH = os.path.join(os.path.dirname(__file__), os.pardir, os.environ.get('ACC_PATH'))
-    ACC_SUI_PATH = os.path.join(os.path.dirname(__file__), os.pardir, os.environ.get('ACC_SUI_PATH'))
+    ACC_SEI_PATH = os.path.join(os.path.dirname(__file__), os.pardir, os.environ.get('ACC_SEI_PATH'))
 except Exception as e:
     print(f"{ACC_PATH=} and {ACC_SEI_PATH} Error: {e}")
 
 ACC_SEI = ACC_SEI_PATH.split('/')[-1].replace('.csv', '')
-DRIVER_PATH = "driver/chromedriver"
 WAIT_TIME = os.environ.get('WAIT_TIME')
 PASSWORD = os.environ.get('PASSWORD')
 

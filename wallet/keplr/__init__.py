@@ -4,18 +4,18 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 import undetected_chromedriver as uc
-from webdriver_manager.chrome import ChromeDriverManager
 
 from app import utils
-from app.config import get_logger, DRIVER_PATH, PASSWORD, CODE_HOME, WIDTH, HEADLESS
+from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS
 
 logger = get_logger(__name__)
 
 
 EXTENSION_PATH = f'{CODE_HOME}/extension/keplr-extension-v0.11.56.crx'
 EXTENSION_DIR = f'{CODE_HOME}/extension/keplr-extension-v0.11.56'
-EXTENSION_ID = 'fceplelmabealiiholccmbakhhcailnl'
-# EXT_URL = f"chrome-extension://fceplelmabealiiholccmbakhhcailnl/popup.html#/register"
+DRIVER_PATH = f'{CODE_HOME}/extension/chromedriver'
+EXTENSION_ID = 'npdbcbhdknmoephofajnekpbocjpphdd'
+# EXT_URL = f"chrome-extension://npdbcbhdknmoephofajnekpbocjpphdd/popup.html#/register"
 EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
 CHAIN_ID = 'atlantic-2'
 CHAIN_NAME = f'Sei {CHAIN_ID}'
@@ -36,9 +36,8 @@ def launchSeleniumWebdriver() -> webdriver:
         logger.info('headless mode')
         options.add_argument('--headless')
 
-    driver_executable_path = ChromeDriverManager().install()
     global driver
-    driver = uc.Chrome(options=options, executable_path=driver_executable_path)
+    driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
 
     if WIDTH:
         driver.set_window_size(WIDTH, 1020)
@@ -51,54 +50,57 @@ def launchSeleniumWebdriver() -> webdriver:
     return driver
 
 
+def try_find(xpath="", by=By.XPATH):
+    try:
+        return driver.find_element(by, xpath)
+    except:
+        return None
+
+
+def try_finds(xpath="", by=By.XPATH):
+    try:
+        return driver.find_elements(by, xpath)
+    except:
+        return []
+
+
+def approve():
+    time.sleep(3)
+    switch_to_window(-1)
+    click('//button[text()="Approve"]', 3)
+    switch_to_window(0)
+    time.sleep(3)
+
+
 def walletSetup(recoveryPhrase : 'str', password : str) -> None:
     driver.execute_script("window.open('');")
-    window_before = driver.window_handles
-    driver.switch_to.window(window_before[-1])
-    time.sleep(2)
+    time.sleep(5)  # wait for the new window to open
+    switch_to_window(-1)
     driver.get(f"{EXT_URL}")
-
     time.sleep(2)
-    click('//button[text()="Import an existing wallet"]')
-
-    click('//button[text()="No thanks"]')
+    switch_to_window(-1)
+    time.sleep(2)
+    click('//*[@id="app"]/div/div[3]/button[3]', 2)
+    switch_to_window(-1)
 
     # fill in recovery seed phrase
-    inputs = driver.find_elements(By.XPATH, '//input')
+    inputs = try_finds('//input')
     list_of_recovery_phrase = recoveryPhrase.split(" ")
     for i, x in enumerate(list_of_recovery_phrase):
-        if i == 0:
-            locate_input = i
-        else:
-            locate_input = i * 2
         phrase = list_of_recovery_phrase[i]
-        inputs[locate_input].send_keys(phrase)
-
-    click('//button[text()="Confirm Secret Recovery Phrase"]')
+        inputs[i].send_keys(phrase)
 
     # fill in password
-    inputs = driver.find_elements(By.XPATH, '//input')
-    inputs[0].send_keys(password)
-    inputs[1].send_keys(password)
+    inputs[12].send_keys("Don")
+    inputs[13].send_keys(password)
+    inputs[14].send_keys(password)
+    time.sleep(2)
+    click('//button[text()="Next"]', 2)
 
-    click('.create-password__form__terms-label', 1, By.CSS_SELECTOR)
+    click('//button[text()="Done"]', 2)
 
-    click('//button[text()="Import my wallet"]')
-
-    click('//button[text()="Got it!"]')
-
-    click('//button[text()="Next"]')
-
-    click('//button[text()="Done"]')
-
-    logger.info("Wallet has been imported successfully")
-
-    # Close the popup
-    click('//*[@id="popover-content"]/div/div/section/div[2]/div/button')
-    # balance = get_balance()
-    # logger.info(f"ETH Mainnet Balance: {balance}")
-    driver.switch_to.window(driver.window_handles[0])
-
+    switch_to_window(0)
+    time.sleep(2)
 
 def click(xpath, time_to_sleep = None, by=By.XPATH) -> None:
     if time_to_sleep is None:
@@ -107,7 +109,7 @@ def click(xpath, time_to_sleep = None, by=By.XPATH) -> None:
     # If click more times, try another method.
     button = driver.find_element(by, xpath)
     try:
-        logger.info('click on "' + button.text + '"')
+        logger.info(f'click on "{button.text}"')
     except:
         pass
     clicking = ActionChains(driver).click(button)
