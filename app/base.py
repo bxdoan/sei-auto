@@ -80,6 +80,30 @@ class BaseAuto(object):
         logger.info(f'Request Success for account len: {len(list_account)}')
         logger.info(f"file report: {self.file_report}")
 
+    def swap(self, account: dict = None):
+        pass
+
+    def addLiquidity(self, account: dict = None):
+        pass
+
+    def removeLiquidity(self, account: dict = None):
+        pass
+
+    def stake(self, account: dict = None):
+        pass
+
+    def unstake(self, account: dict = None):
+        pass
+
+    def harvest(self, account: dict = None):
+        pass
+
+    def claim(self, account: dict = None):
+        pass
+
+    def farm(self, account: dict = None):
+        pass
+
 
 class KeplrAuto(BaseAuto):
 
@@ -90,3 +114,4 @@ class KeplrAuto(BaseAuto):
         self.list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
 
         self.file_report = f"{HOME_TMP}/report_{ACC_SEI}_{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
+
