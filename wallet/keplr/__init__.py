@@ -56,7 +56,7 @@ def walletSetup(recoveryPhrase : 'str', password : str) -> None:
     window_before = driver.window_handles
     driver.switch_to.window(window_before[-1])
     time.sleep(2)
-    driver.get(f"{EXT_URL}#onboarding/welcome")
+    driver.get(f"{EXT_URL}")
 
     time.sleep(2)
     click('//button[text()="Import an existing wallet"]')

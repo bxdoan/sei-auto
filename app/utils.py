@@ -6,7 +6,7 @@ import pandas as pd
 import random
 import string
 
-from app_auto.config import HOME_PACKAGE, HOME_TMP
+from app.config import HOME_PACKAGE, HOME_TMP
 
 
 def read_xlsx_file(dir_file: str, column_mapping: dict = None, sheet_name: str = None) -> list:
