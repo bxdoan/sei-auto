@@ -1,5 +1,7 @@
+![](./imgs/sei_network.png)
+
 # sei-auto
-sei network auto using selenium
+SEI Network auto using selenium framework
 
 ## Create wallet
 

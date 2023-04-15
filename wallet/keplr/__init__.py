@@ -64,14 +64,6 @@ def try_finds(xpath="", by=By.XPATH):
         return []
 
 
-def approve():
-    time.sleep(3)
-    switch_to_window(-1)
-    click('//button[text()="Approve"]', 3)
-    switch_to_window(0)
-    time.sleep(3)
-
-
 def walletSetup(recoveryPhrase : 'str', password : str) -> None:
     driver.execute_script("window.open('');")
     time.sleep(5)  # wait for the new window to open
@@ -183,7 +175,7 @@ def switch_to_window(window_number):
 
 def approve():
     try:
-        time.sleep(4)
+        time.sleep(3)
         switch_to_window(-1)
         click("//button[text()='Approve']", 5)
     except:

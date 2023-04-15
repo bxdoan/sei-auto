@@ -7,16 +7,12 @@ name = "pypi"
 selenium = "*"
 undetected-chromedriver = "*"
 hcaptcha-challenger = "*"
-webdriver-manager = "*"
-zksync2 = "*"
 requests = "*"
 python-dotenv = "*"
 python-json-config = "*"
 pytest = "*"
 openpyxl = "*"
 pandas = "*"
-
-[dev-packages]
 
 [requires]
 python_version = "3.10"
