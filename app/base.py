@@ -108,7 +108,7 @@ class BaseAuto(object):
 class KeplrAuto(BaseAuto):
 
     def __init__(self, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self.auto = keplr
         self.driver = self.auto.launchSeleniumWebdriver()
         self.list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()

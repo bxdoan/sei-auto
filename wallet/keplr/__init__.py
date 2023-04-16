@@ -1,5 +1,6 @@
 import time
 import pandas as pd
+from app.enums import GasPrice
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -52,14 +53,14 @@ def launchSeleniumWebdriver() -> webdriver:
 def try_find(xpath="", by=By.XPATH):
     try:
         return driver.find_element(by, xpath)
-    except:
+    except Exception as _e:
         return None
 
 
 def try_finds(xpath="", by=By.XPATH):
     try:
         return driver.find_elements(by, xpath)
-    except:
+    except Exception as _e:
         return []
 
 
@@ -92,6 +93,7 @@ def walletSetup(recoveryPhrase : 'str', password : str) -> None:
 
     switch_to_window(0)
     time.sleep(2)
+
 
 def click(xpath, time_to_sleep = None, by=By.XPATH) -> None:
     if time_to_sleep is None:
@@ -172,17 +174,18 @@ def switch_to_window(window_number):
     logger.info(f'switched to window numer: {str(window_number)}')
 
 
-def approve():
+def approve(gas=GasPrice.Average):
     time.sleep(3)
     switch_to_window(-1)
-    try:
-        click("//div[text()='Low']")
-    except:
-        pass
+    if gas in GasPrice.all():
+        try:
+            click(f"//div[text()='{gas}']")
+        except Exception as _e:
+            pass
 
     try:
         click("//button[text()='Approve']", 5)
-    except:
+    except Exception as _e:
         pass
 
 

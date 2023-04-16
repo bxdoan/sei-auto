@@ -44,6 +44,12 @@ class AccountStatus(BaseEnum):
     Inactive = '1'
 
 
+class GasPrice(BaseEnum):
+    Low = 'Low'
+    Average = 'Average'
+    High = 'High'
+
+
 COLUMN_MAPPING = {
     'Name': 'name',
     'Address': 'address',

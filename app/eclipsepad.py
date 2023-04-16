@@ -110,6 +110,7 @@ class Eclipsepad(KeplrAuto):
             time.sleep(5)
             count_faucet += 1
 
+
 if __name__ == '__main__':
     list_account = AccountLoader().parser_file()
     swap_params = {
