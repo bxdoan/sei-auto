@@ -31,7 +31,7 @@ PASSWORD = os.environ.get('PASSWORD')
 
 HEADLESS = os.environ.get('HEADLESS')
 WIDTH = os.environ.get('WIDTH')
-
+EXTENSION_ID_KEPLR = os.environ.get('EXTENSION_ID_KEPLR')
 
 def get_logger(name):
     log = logging.getLogger(name)

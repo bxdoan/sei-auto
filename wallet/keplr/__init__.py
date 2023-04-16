@@ -6,7 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import undetected_chromedriver as uc
 
 from app import utils
-from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS
+from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EXTENSION_ID_KEPLR
 
 logger = get_logger(__name__)
 
@@ -14,8 +14,7 @@ logger = get_logger(__name__)
 EXTENSION_PATH = f'{CODE_HOME}/extension/keplr-extension-v0.11.56.crx'
 EXTENSION_DIR = f'{CODE_HOME}/extension/keplr-extension-v0.11.56'
 DRIVER_PATH = f'{CODE_HOME}/extension/chromedriver'
-EXTENSION_ID = 'npdbcbhdknmoephofajnekpbocjpphdd'
-# EXT_URL = f"chrome-extension://npdbcbhdknmoephofajnekpbocjpphdd/popup.html#/register"
+EXTENSION_ID = EXTENSION_ID_KEPLR or 'npdbcbhdknmoephofajnekpbocjpphdd'
 EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
 CHAIN_ID = 'atlantic-2'
 CHAIN_NAME = f'Sei {CHAIN_ID}'
