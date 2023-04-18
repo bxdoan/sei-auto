@@ -26,6 +26,7 @@ def launchSeleniumWebdriver() -> webdriver:
     options = uc.ChromeOptions()
 
     options.add_argument(f"--load-extension={EXTENSION_DIR}")
+    # options.add_argument(f"--proxy-server==172.104.41.13:16379")
     prefs = {
         "extensions.ui.developer_mode": True,
     }

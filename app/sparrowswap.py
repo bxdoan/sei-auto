@@ -107,7 +107,7 @@ class Sparrows(KeplrAuto):
         keplr.approve()
 
         volume = amount or percent
-        account['description'] = f"syncswap {from_token} to {to_token} {volume} completed"
+        account['description'] = f"sparrow {from_token} to {to_token} {volume} completed"
         logger.info("success")
 
     def _choose_token(self, token_symbol: str, locate_button):
@@ -118,6 +118,57 @@ class Sparrows(KeplrAuto):
                 keplr.click('//*[@id="__next"]/div/div[1]/div[2]/main/div/div[1]/div[3]/div[3]/div[1]/div[1]/div/p[1]', 3)
             else:
                 keplr.click(f"//p[text()='{token_symbol}']", 3)
+
+    def addLiquidity(self, account: dict = None):
+        pair   = self.params.get('pair')
+        volume = self.params.get('volume')
+
+        keplr.switch_to_window(0)
+        url = f"{self.config['url']}"
+        self.driver.get(url)
+        time.sleep(2)
+
+        # close wellcome popup
+        keplr.switch_to_window(0)
+        keplr.click("//div[contains(text(), 'Enter the App')]", 3)
+
+        # setup metamask with seed phrase and password
+        keplr.walletSetup(account['seed_phrase'], account['password'])
+
+        # click on the Connect Wallet button
+        keplr.click("//div[text()='Connect Wallet']", 3)
+
+        # click on the keplr wallet button
+        portal = self.driver.find_element(By.CSS_SELECTOR, "sparrowblocks-portal")
+        keplr_wallet = portal.find_elements(By.CSS_SELECTOR, "button")
+        keplr_wallet[1].click()
+
+        keplr.approve()
+
+        keplr.switch_to_window(0)
+        self.driver.get(f"{self.config['url']}/liquidity/{pair}")
+        time.sleep(2)
+
+        # add liquidity
+        keplr.click("//div[contains(text(), 'Enter the App')]")
+        keplr.click("//div[contains(text(), 'Liquidity')]")
+
+        if volume:
+            inputs = self.driver.find_elements(By.XPATH, '//input')
+            inputs[2].click()
+            inputs[2].clear()
+            inputs[2].send_keys(volume)
+        else:
+            keplr.click("//div[contains(text(), 'max liquidity')]")
+
+        keplr.click("//div[contains(text(), 'Add')]")
+        keplr.approve()
+
+        account['description'] = f"add liquidity {pair}"
+        logger.info("success")
+
+    def incentive(self):
+        pass
 
 
 if __name__ == '__main__':
@@ -130,9 +181,11 @@ if __name__ == '__main__':
         "amount": "1",
         "from_token": "RUM",
         "to_token": "SEI",
+        "pair": "SEI",
     }
     try:
-        Sparrows(params=params).swap(**swap_params)
+        # Sparrows(params=params).swap(**swap_params)
+        Sparrows(params={"pair": "SEIRUM"}).addLiquidity(**swap_params)
         # Sparrows(params=params).process_all(method='swap')
     except Exception as e:
         logger.error(e)
