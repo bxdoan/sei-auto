@@ -69,11 +69,14 @@ class BaseAuto(object):
                         'account_index': real_idx,
                     })
                     method(**kwargs)
+                    account['status'] = AccountStatus.Inactive
                 except Exception as e:
                     logger.error(e)
 
                 self.driver.quit()
                 self.driver = self.auto.launchSeleniumWebdriver()
+            else:
+                logger.info(f"Account {account['address']} is inactive")
 
             self.save_report(account)
 

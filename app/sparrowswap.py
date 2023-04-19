@@ -167,14 +167,128 @@ class Sparrows(KeplrAuto):
         account['description'] = f"add liquidity {pair}"
         logger.info("success")
 
-    def incentive(self):
-        pass
+    def incentive(self, account: dict = None):
+        keplr.switch_to_window(0)
+        url = f"{self.config['url']}"
+        self.driver.get(url)
+        time.sleep(2)
+
+        # close wellcome popup
+        keplr.switch_to_window(0)
+        keplr.click("//div[contains(text(), 'Enter the App')]", 3)
+
+        # setup metamask with seed phrase and password
+        keplr.walletSetup(account['seed_phrase'], account['password'])
+
+        # click on the Connect Wallet button
+        keplr.click("//div[text()='Connect Wallet']", 3)
+
+        # click on the keplr wallet button
+        portal = self.driver.find_element(By.CSS_SELECTOR, "sparrowblocks-portal")
+        keplr_wallet = portal.find_elements(By.CSS_SELECTOR, "button")
+        keplr_wallet[1].click()
+
+        keplr.approve()
+
+        # Swap 0.7 SEI to RUM
+        keplr.switch_to_window(0)
+        keplr.click("//p[contains(text(), 'Swap between')]")
+
+        opt_to = keplr.try_find("//p[contains(text(), 'Select a token')]")
+        self._choose_token("RUM", opt_to)
+
+        # fill in amount
+        inputs = self.driver.find_elements(By.XPATH, '//input')
+        inputs[1].click()
+        inputs[1].clear()
+        inputs[1].send_keys("0,7")
+
+        time.sleep(2)
+        # click button Swap
+        keplr.switch_to_window(0)
+        keplr.click("//p[contains(text(), 'Swap between')]")
+        swaps = self.driver.find_elements(By.XPATH, "//div[contains(text(), 'Swap')]")
+        swaps[1].click()
+
+        # click button Confirm Swap
+        keplr.approve()
+        keplr.try_click('//*[@id="__next"]/div/div[2]/div/div/button')
+        time.sleep(15)
+
+        # Swap 0.2 SEI to USDC
+        keplr.switch_to_window(0)
+        self.driver.get(url)
+        time.sleep(2)
+        keplr.try_click("//div[contains(text(), 'Enter the App')]")
+
+        keplr.click("//p[contains(text(), 'Swap between')]")
+
+        opt_to = keplr.try_find("//p[contains(text(), 'Select a token')]")
+        self._choose_token("USDC", opt_to)
+
+        # fill in amount
+        inputs = self.driver.find_elements(By.XPATH, '//input')
+        inputs[1].click()
+        inputs[1].clear()
+        inputs[1].send_keys("0,2")
+
+        time.sleep(2)
+        # click button Swap
+        keplr.switch_to_window(0)
+        keplr.click("//p[contains(text(), 'Swap between')]")
+        swaps = self.driver.find_elements(By.XPATH, "//div[contains(text(), 'Swap')]")
+        swaps[1].click()
+
+        # click button Confirm Swap
+        keplr.approve()
+        keplr.try_click('//*[@id="__next"]/div/div[2]/div/div/button')
+        time.sleep(15)
+
+        # Add liquidity SEI-RUM with 30 RUM
+        keplr.switch_to_window(0)
+        self.driver.get(f"{self.config['url']}/liquidity/SEIRUM")
+        time.sleep(2)
+
+        # add liquidity
+        keplr.try_click("//div[contains(text(), 'Enter the App')]")
+        keplr.click("//div[contains(text(), 'Liquidity')]")
+
+        inputs = self.driver.find_elements(By.XPATH, '//input')
+        inputs[2].click()
+        inputs[2].clear()
+        inputs[2].send_keys("30")
+        time.sleep(2)
+
+        keplr.click("//button[contains(text(), 'Add')]")
+        keplr.approve()
+        keplr.try_click('//*[@id="__next"]/div/div[2]/div/div/button/span/svg')
+
+        # Add liquidity SEI-USDC with 30 USDC
+        keplr.switch_to_window(0)
+        self.driver.get(f"{self.config['url']}/liquidity/SEIUSDC")
+        time.sleep(2)
+
+        # add liquidity
+        keplr.click("//div[contains(text(), 'Enter the App')]")
+        keplr.click("//div[contains(text(), 'Liquidity')]")
+
+        inputs = self.driver.find_elements(By.XPATH, '//input')
+        inputs[2].click()
+        inputs[2].clear()
+        inputs[2].send_keys("30")
+        time.sleep(2)
+
+        keplr.click("//button[contains(text(), 'Add')]")
+        keplr.approve()
+        keplr.try_click('//*[@id="__next"]/div/div[2]/div/div/button/span/svg')
+
+        logger.info("success")
 
 
 if __name__ == '__main__':
     list_account = AccountLoader().parser_file()
     swap_params = {
-        "account": list_account[0]
+        "account": list_account[2]
     }
     params = {
         # "percent": "1/2",
@@ -184,8 +298,9 @@ if __name__ == '__main__':
         "pair": "SEI",
     }
     try:
+        # Sparrows(params=params).incentive(**swap_params)
         # Sparrows(params=params).swap(**swap_params)
-        Sparrows(params={"pair": "SEIRUM"}).addLiquidity(**swap_params)
-        # Sparrows(params=params).process_all(method='swap')
+        # Sparrows(params={"pair": "SEIRUM"}).addLiquidity(**swap_params)
+        Sparrows(params=params).process_all(method='incentive')
     except Exception as e:
         logger.error(e)

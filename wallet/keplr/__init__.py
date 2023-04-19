@@ -96,6 +96,13 @@ def walletSetup(recoveryPhrase : 'str', password : str) -> None:
     time.sleep(2)
 
 
+def try_click(xpath, time_to_sleep = None, by=By.XPATH) -> None:
+    try:
+        click(xpath, time_to_sleep, by)
+    except:
+        pass
+
+
 def click(xpath, time_to_sleep = None, by=By.XPATH) -> None:
     if time_to_sleep is None:
         time_to_sleep = 1
