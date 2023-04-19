@@ -56,6 +56,7 @@ class Sparrows(KeplrAuto):
         # close wellcome popup
         keplr.switch_to_window(0)
         keplr.click("//div[contains(text(), 'Enter the App')]", 3)
+        self.driver.execute_script("window.open('');")
 
         # setup metamask with seed phrase and password
         keplr.walletSetup(account['seed_phrase'], account['password'])
@@ -299,8 +300,8 @@ if __name__ == '__main__':
     }
     try:
         # Sparrows(params=params).incentive(**swap_params)
-        # Sparrows(params=params).swap(**swap_params)
+        Sparrows(params=params).swap(**swap_params)
         # Sparrows(params={"pair": "SEIRUM"}).addLiquidity(**swap_params)
-        Sparrows(params=params).process_all(method='incentive')
+        # Sparrows(params=params).process_all(method='incentive')
     except Exception as e:
         logger.error(e)
