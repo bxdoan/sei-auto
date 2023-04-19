@@ -1,5 +1,4 @@
 import time
-from selenium.webdriver.common.by import By
 
 from wallet import keplr
 from app.account import AccountLoader
@@ -68,31 +67,15 @@ class Eclipsepad(KeplrAuto):
         keplr.click("//div[text()='Keplr']", 3)
 
         # click on the Faucet
-        count_faucet = 0
-        while True:
-            try:
-                # try to back to main page
-                keplr.switch_to_window(0)
-                keplr.click("//div[contains(text(), 'Jumanji Finance')]", 0.1)
-            except:
-                pass
+        self._try_faucet()
 
-            try:
-                keplr.click("//button[text()='Faucet']", 3)
-                keplr.approve()
-            except:
-                pass
-            logger.info(f"Process Faucet {count_faucet}")
-            time.sleep(5)
-            count_faucet += 1
+        logger.info(f"Done Faucet")
 
-        logger.info(f"Done Faucet {count_faucet}")
-
-    def try_faucet(self):
+    def _try_faucet(self):
         # click on the Faucet
         count_faucet = 0
         while True:
-            if count_faucet > 200:
+            if count_faucet > 30:
                 break
             try:
                 # try to back to main page

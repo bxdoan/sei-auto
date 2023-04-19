@@ -33,6 +33,13 @@ HEADLESS = os.environ.get('HEADLESS')
 WIDTH = os.environ.get('WIDTH')
 EXTENSION_ID_KEPLR = os.environ.get('EXTENSION_ID_KEPLR')
 
+# download the newest version of keplr extension from:
+# ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
+# or from  https://github.com/chainapsis/keplr-wallet
+EXTENSION_DIR = os.environ.get('EXTENSION_DIR')
+DRIVER_PATH = os.environ.get('DRIVER_PATH')
+
+
 def get_logger(name):
     log = logging.getLogger(name)
     log.setLevel("DEBUG")
