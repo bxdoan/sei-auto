@@ -285,6 +285,27 @@ class Sparrows(KeplrAuto):
 
         logger.info("success")
 
+    def removeLiquidity(self, account: dict = None):
+        keplr.switch_to_window(0)
+        self.driver.get(f"{self.config['url']}/liquidity/SEIRUM")
+        time.sleep(2)
+
+        # remove liquidity
+        keplr.try_click("//div[contains(text(), 'Enter the App')]")
+        keplr.click("//div[contains(text(), 'Liquidity')]")
+
+        inputs = self.driver.find_elements(By.XPATH, '//input')
+        inputs[2].click()
+        inputs[2].clear()
+        inputs[2].send_keys("0,1")
+        time.sleep(2)
+
+        keplr.click("//button[contains(text(), 'Remove')]")
+        keplr.approve()
+        keplr.try_click('//*[@id="__next"]/div/div[2]/div/div/button/span/svg')
+
+        logger.info("success")
+
 
 if __name__ == '__main__':
     list_account = AccountLoader().parser_file()
