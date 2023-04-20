@@ -46,13 +46,9 @@ class AccountLoader(object):
         # endregion
         return parsed_records
 
-    def _read_csv_file(self, column_mapping=None):
-        if not column_mapping:
-            column_mapping = COLUMN_MAPPING
-        return utils.read_csv_file(dir_file=self.dir, column_mapping=column_mapping)
+    def _read_csv_file(self):
+        return utils.read_csv_file(dir_file=self.dir, column_mapping=COLUMN_MAPPING)
 
-    def _read_xlsx_file(self, column_mapping=None):
-        if not column_mapping:
-            column_mapping = COLUMN_MAPPING
-        return utils.read_xlsx_file(dir_file=self.dir, column_mapping=column_mapping)
+    def _read_xlsx_file(self):
+        return utils.read_xlsx_file(dir_file=self.dir, column_mapping=COLUMN_MAPPING)
 
