@@ -8,7 +8,7 @@ import undetected_chromedriver as uc
 
 from app import utils
 from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EXTENSION_ID_KEPLR, \
-    EXTENSION_DIR, EXTENSION_DIR_LEAP, DRIVER_PATH
+    EXTENSION_DIR, EXTENSION_DIR_LEAP, DRIVER_PATH, HEIGHT
 
 logger = get_logger(__name__)
 
@@ -24,7 +24,6 @@ FILE_NAME = f"{CODE_HOME}/account.sei.csv"
 
 def launchSeleniumWebdriver() -> webdriver:
     options = uc.ChromeOptions()
-
     options.add_argument(f"--load-extension={EXTENSION_DIR_LEAP},{EXTENSION_DIR}")
     prefs = {
         "extensions.ui.developer_mode": True,
@@ -38,12 +37,7 @@ def launchSeleniumWebdriver() -> webdriver:
 
     global driver
     driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
-
-    if WIDTH:
-        driver.set_window_size(WIDTH, 1020)
-    else:
-        driver.set_window_size(1300, 1020)
-
+    driver.set_window_size(WIDTH, HEIGHT)
     logger.info(f"Extension has been loaded successfully ")
     time.sleep(5)
     driver.refresh()

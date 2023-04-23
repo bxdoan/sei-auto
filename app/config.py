@@ -1,7 +1,5 @@
 import os
 import logging
-
-from python_json_config import ConfigBuilder
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,6 +13,7 @@ list_make_dir = [
     HOME_TMP, HOME_LOG
 ]
 for _dir in list_make_dir:
+    # make sure the folder exists before using it
     os.makedirs(_dir, exist_ok=True)
 
 ACC_PATH = os.environ.get('ACC_PATH')
@@ -27,17 +26,18 @@ except Exception as e:
 
 ACC_SEI = ACC_SEI_PATH.split('/')[-1].replace('.csv', '')
 WAIT_TIME = os.environ.get('WAIT_TIME')
-PASSWORD = os.environ.get('PASSWORD')
+PASSWORD = os.environ.get('PASSWORD')  # password default for all accounts
 
-HEADLESS = os.environ.get('HEADLESS')
-WIDTH = os.environ.get('WIDTH')
+HEADLESS = os.environ.get('HEADLESS')     # for headless mode chrome
+WIDTH    = os.environ.get('WIDTH', 1300)  # for which width of chrome
+HEIGHT   = os.environ.get('HEIGHT', 1020) # for which height of chrome
 
 # download the newest version of keplr extension from:
 # ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
 # or from  https://github.com/chainapsis/keplr-wallet
 EXTENSION_DIR      = os.environ.get('EXTENSION_DIR')
-EXTENSION_DIR_LEAP = os.environ.get('EXTENSION_DIR_LEAP')
 EXTENSION_ID_KEPLR = os.environ.get('EXTENSION_ID_KEPLR')
+EXTENSION_DIR_LEAP = os.environ.get('EXTENSION_DIR_LEAP')
 EXTENSION_ID_LEAP  = os.environ.get('EXTENSION_ID_LEAP')
 DRIVER_PATH        = os.environ.get('DRIVER_PATH')
 
