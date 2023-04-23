@@ -36,7 +36,9 @@ WIDTH = os.environ.get('WIDTH')
 # ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
 # or from  https://github.com/chainapsis/keplr-wallet
 EXTENSION_DIR      = os.environ.get('EXTENSION_DIR')
+EXTENSION_DIR_LEAP = os.environ.get('EXTENSION_DIR_LEAP')
 EXTENSION_ID_KEPLR = os.environ.get('EXTENSION_ID_KEPLR')
+EXTENSION_ID_LEAP  = os.environ.get('EXTENSION_ID_LEAP')
 DRIVER_PATH        = os.environ.get('DRIVER_PATH')
 
 

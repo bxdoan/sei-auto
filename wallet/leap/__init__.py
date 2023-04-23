@@ -7,15 +7,15 @@ from selenium.webdriver.common.action_chains import ActionChains
 import undetected_chromedriver as uc
 
 from app import utils
-from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EXTENSION_ID_KEPLR, \
-    EXTENSION_DIR, EXTENSION_DIR_LEAP, DRIVER_PATH
+from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EXTENSION_ID_LEAP, \
+    EXTENSION_DIR_LEAP, EXTENSION_DIR, DRIVER_PATH
 
 logger = get_logger(__name__)
 
 # download the newest version of keplr extension from:
 # ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
 # or from  https://github.com/chainapsis/keplr-wallet
-EXTENSION_ID = EXTENSION_ID_KEPLR or 'npdbcbhdknmoephofajnekpbocjpphdd'
+EXTENSION_ID = EXTENSION_ID_LEAP
 EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
 CHAIN_ID = 'atlantic-2'
 CHAIN_NAME = f'Sei {CHAIN_ID}'
