@@ -122,6 +122,7 @@ def switch_to_window(window_number):
     # Switch to another window, start from 0.
     try:
         wh = driver.window_handles
+        logger.info(f'we have {len(wh)} windows')
         driver.switch_to.window(wh[window_number])
     except:
         pass

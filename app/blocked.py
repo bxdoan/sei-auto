@@ -92,7 +92,7 @@ class Blocked(LeapAuto):
 if __name__ == '__main__':
     list_account = AccountLoader().parser_file()
     swap_params = {
-        "account": list_account[3]
+        "account": list_account[4]
     }
     try:
         Blocked().faucet(**swap_params)
