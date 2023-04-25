@@ -35,6 +35,8 @@ HEIGHT   = os.environ.get('HEIGHT', 1020) # for which height of chrome
 # download the newest version of keplr extension from:
 # ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
 # or from  https://github.com/chainapsis/keplr-wallet
+# or get from your local machine
+# /Users/$USER/Library/Application\ Support/Google/Chrome/Default/Extensions/
 EXTENSION_DIR      = os.environ.get('EXTENSION_DIR')
 EXTENSION_ID_KEPLR = os.environ.get('EXTENSION_ID_KEPLR')
 EXTENSION_DIR_LEAP = os.environ.get('EXTENSION_DIR_LEAP')

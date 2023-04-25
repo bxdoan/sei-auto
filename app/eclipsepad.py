@@ -43,7 +43,11 @@ class Eclipsepad(KeplrAuto):
 
         # close wellcome popup
         keplr.switch_to_window(0)
-        keplr.click("//div[contains(text(), 'Jumanji Finance')]", 2)
+
+        keplr.click("//div[contains(text(), 'Jumanji Finance')]")
+        self.login_twitter(account)
+        keplr.click("//div[contains(text(), 'Jumanji Finance')]")
+        self.login_discord(account)
 
         # setup metamask with seed phrase and password
         keplr.walletSetup(account['seed_phrase'], account['password'])

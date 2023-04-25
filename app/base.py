@@ -1,7 +1,9 @@
 import shutil
+import time
 from datetime import datetime
 
 from wallet import keplr
+from wallet import leap
 from app import utils
 from app.account import AccountLoader
 from app.config import ACC_SEI_PATH, HOME_TMP, ACC_SEI, CODE_HOME, get_logger
@@ -18,6 +20,10 @@ class BaseAuto(object):
         self.driver = None
         self.auto = None
         self.params = kwargs.get('params', {})
+
+        self.list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
+
+        self.file_report = f"{HOME_TMP}/report_{ACC_SEI}_{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
 
     def save_report(self, data: dict):
         list_index = list(COLUMN_MAPPING.values())
@@ -42,6 +48,42 @@ class BaseAuto(object):
         # prepare file report
         shutil.copyfile(f"{CODE_HOME}/account.sample.csv", self.file_report)
         return 0
+
+    def login_twitter(self, account: dict) -> None:
+        url = "https://twitter.com/i/flow/login"
+        self.driver.execute_script("window.open('');")
+        time.sleep(5)  # wait for the new window to open
+        self.auto.switch_to_window(-1)
+        self.driver.get(url)
+        time.sleep(5)
+        # fill in email
+        twemail = self.auto.try_find('//input')
+        twemail.send_keys(account['tw_email'])
+        self.auto.click('//span[text()="Next"]', 3)
+
+        twpass = self.auto.try_finds('//input')
+        twpass[1].send_keys(account['tw_pass'])
+        self.auto.click('//span[text()="Log in"]', 5)
+        self.driver.close()
+        self.auto.switch_to_window(0)
+        logger.info(f"Login twitter for account: {account['tw_email']}")
+
+    def login_discord(self, account: dict) -> None:
+        url = "https://discord.com/login"
+        self.driver.execute_script("window.open('');")
+        time.sleep(5)  # wait for the new window to open
+        self.auto.switch_to_window(-1)
+        self.driver.get(url)
+        time.sleep(5)
+        # fill in email
+        twemail = self.auto.try_finds('//input')
+        twemail[0].send_keys(account['dis_email'])
+        twemail[1].send_keys(account['dis_pass'])
+        self.auto.click('//div[text()="Log In"]', 5)
+
+        self.driver.close()
+        self.auto.switch_to_window(0)
+        logger.info(f"Login discord for account: {account['dis_email']}")
 
     def process_all(self, method='deposit', **kwargs):
         method = getattr(self, method)
@@ -114,7 +156,11 @@ class KeplrAuto(BaseAuto):
         super().__init__(**kwargs)
         self.auto = keplr
         self.driver = self.auto.launchSeleniumWebdriver()
-        self.list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
 
-        self.file_report = f"{HOME_TMP}/report_{ACC_SEI}_{datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
 
+class LeapAuto(BaseAuto):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.auto = leap
+        self.driver = self.auto.launchSeleniumWebdriver()
