@@ -59,13 +59,21 @@ class BaseAuto(object):
         # fill in email
         twemail = self.auto.try_find('//input')
         twemail.send_keys(account['tw_email'])
-        self.auto.click('//span[text()="Next"]', 3)
+        self.auto.click('//span[text()="Next"]', 5)
 
-        twpass = self.auto.try_finds('//input')
-        twpass[1].send_keys(account['tw_pass'])
-        self.auto.click('//span[text()="Log in"]', 5)
-        self.driver.close()
+        twpass_or_username = self.auto.try_finds('//input')
+        if len(twpass_or_username) == 1:
+            twpass_or_username[0].send_keys(account['tw_email'].split('@')[0])
+            self.auto.click('//span[text()="Next"]', 3)
+            twpass = self.auto.try_finds('//input')
+            twpass[1].send_keys(account['tw_pass'])
+            self.auto.click('//span[text()="Log in"]', 3)
+        else:
+            twpass_or_username[1].send_keys(account['tw_pass'])
+            self.auto.click('//span[text()="Next"]', 3)
+
         self.auto.switch_to_window(0)
+        time.sleep(3)
         logger.info(f"Login twitter for account: {account['tw_email']}")
 
     def login_discord(self, account: dict) -> None:
@@ -79,10 +87,7 @@ class BaseAuto(object):
         twemail = self.auto.try_finds('//input')
         twemail[0].send_keys(account['dis_email'])
         twemail[1].send_keys(account['dis_pass'])
-        self.auto.click('//div[text()="Log In"]', 5)
-
-        self.driver.close()
-        self.auto.switch_to_window(0)
+        self.auto.click('//div[text()="Log In"]', 8)
         logger.info(f"Login discord for account: {account['dis_email']}")
 
     def process_all(self, method='deposit', **kwargs):

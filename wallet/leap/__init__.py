@@ -1,14 +1,16 @@
 import time
 import pandas as pd
 from app.enums import GasPrice
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
+from selenium import webdriver
 import undetected_chromedriver as uc
+from selenium.webdriver.common.action_chains import ActionChains
 
 from app import utils
-from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EXTENSION_ID_LEAP, \
+from app.config import get_logger, WIDTH, HEADLESS, \
     EXTENSION_DIR_LEAP, EXTENSION_DIR, DRIVER_PATH
+
+from app.config import PASSWORD, CODE_HOME, EXTENSION_ID_LEAP
 
 logger = get_logger(__name__)
 
@@ -16,7 +18,7 @@ logger = get_logger(__name__)
 # ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
 # or from  https://github.com/chainapsis/keplr-wallet
 EXTENSION_ID = EXTENSION_ID_LEAP
-EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
+EXT_URL = f"chrome-extension://{EXTENSION_ID}/index.html"
 CHAIN_ID = 'atlantic-2'
 CHAIN_NAME = f'Sei {CHAIN_ID}'
 FILE_NAME = f"{CODE_HOME}/account.sei.csv"
@@ -24,7 +26,6 @@ FILE_NAME = f"{CODE_HOME}/account.sei.csv"
 
 def launchSeleniumWebdriver() -> webdriver:
     options = uc.ChromeOptions()
-
     options.add_argument(f"--load-extension={EXTENSION_DIR_LEAP},{EXTENSION_DIR}")
     prefs = {
         "extensions.ui.developer_mode": True,
@@ -46,7 +47,6 @@ def launchSeleniumWebdriver() -> webdriver:
 
     logger.info(f"Extension has been loaded successfully ")
     time.sleep(5)
-    driver.refresh()
     return driver
 
 
@@ -62,37 +62,6 @@ def try_finds(xpath="", by=By.XPATH):
         return driver.find_elements(by, xpath)
     except Exception as _e:
         return []
-
-
-def walletSetup(recoveryPhrase : 'str', password : str) -> None:
-    driver.execute_script("window.open('');")
-    time.sleep(5)  # wait for the new window to open
-    switch_to_window(-1)
-    driver.get(f"{EXT_URL}")
-    time.sleep(2)
-    switch_to_window(-1)
-    time.sleep(2)
-    click('//*[@id="app"]/div/div[3]/button[3]', 2)
-    switch_to_window(-1)
-
-    # fill in recovery seed phrase
-    inputs = try_finds('//input')
-    list_of_recovery_phrase = recoveryPhrase.split(" ")
-    for i, x in enumerate(list_of_recovery_phrase):
-        phrase = list_of_recovery_phrase[i]
-        inputs[i].send_keys(phrase)
-
-    # fill in password
-    inputs[12].send_keys("Don")
-    inputs[13].send_keys(password)
-    inputs[14].send_keys(password)
-    time.sleep(2)
-    click('//button[text()="Next"]', 2)
-
-    click('//button[text()="Done"]', 5)
-
-    switch_to_window(0)
-    time.sleep(2)
 
 
 def try_click(xpath, time_to_sleep = None, by=By.XPATH) -> None:
@@ -121,6 +90,42 @@ def insert_text(xpath, text) -> None:
     input_text = driver.find_element(By.XPATH, xpath)
     input_text.send_keys(text)
     time.sleep(0.5)
+
+
+def walletSetup(recoveryPhrase : 'str', password : str) -> None:
+    driver.execute_script("window.open('');")
+    time.sleep(5)  # wait for the new window to open
+    switch_to_window(-1)
+    driver.get(f"{EXT_URL}")
+    time.sleep(2)
+    switch_to_window(-1)
+    time.sleep(2)
+    click("//div[contains(text(), 'Keplr')]", 5)
+
+    # fill in recovery seed phrase
+    seed_phrase_input = try_find('//textarea')
+    seed_phrase_input.send_keys(recoveryPhrase)
+
+    click("//div[contains(text(), 'Import Wallet')]", 2)
+    click("//*[@id='root']/div/div[2]/div/div[1]/div[2]/div[1]/div[1]/div[2]", 2)
+    click("//div[contains(text(), 'Proceed')]", 2)
+
+    inputs = try_finds('//input')
+    inputs[0].send_keys(password)
+    inputs[1].send_keys(password)
+    click("//div[contains(text(), 'Proceed')]", 3)
+    switch_to_window(0)
+    time.sleep(2)
+
+
+def switch_to_window(window_number):
+    # Switch to another window, start from 0.
+    try:
+        wh = driver.window_handles
+        driver.switch_to.window(wh[window_number])
+    except:
+        pass
+    logger.info(f'switched to window numer: {str(window_number)}')
 
 
 def process_acc(idx):
@@ -169,16 +174,6 @@ def get_address():
     except:
         pass
     return addr
-
-
-def switch_to_window(window_number):
-    # Switch to another window, start from 0.
-    try:
-        wh = driver.window_handles
-        driver.switch_to.window(wh[window_number])
-    except:
-        pass
-    logger.info(f'switched to window numer: {str(window_number)}')
 
 
 def approve(gas=GasPrice.Average):

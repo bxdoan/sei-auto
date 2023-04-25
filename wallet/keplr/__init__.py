@@ -24,7 +24,7 @@ FILE_NAME = f"{CODE_HOME}/account.sei.csv"
 
 def launchSeleniumWebdriver() -> webdriver:
     options = uc.ChromeOptions()
-    options.add_argument(f"--load-extension={EXTENSION_DIR_LEAP},{EXTENSION_DIR}")
+    options.add_argument(f"--load-extension={EXTENSION_DIR},{EXTENSION_DIR_LEAP}")
     prefs = {
         "extensions.ui.developer_mode": True,
     }
