@@ -11,6 +11,8 @@ from app.enums import COLUMN_MAPPING, AccountStatus
 
 logger = get_logger(__name__)
 
+SEI_DISCORD = "https://discord.gg/sei"
+BLOCK_DISCORD = "https://discord.gg/blocked"
 
 class BaseAuto(object):
 
@@ -81,6 +83,33 @@ class BaseAuto(object):
         time.sleep(3)
         logger.info(f"Login twitter for account: {acc['tw_email']}")
 
+    def login_twitter_token(self, acc: dict) -> None:
+        url = "https://twitter.com/i/flow/login"
+        self.driver.execute_script("window.open('');")
+        time.sleep(5)  # wait for the new window to open
+        self.auto.switch_to_window(-1)
+        self.driver.get(url)
+        time.sleep(5)
+        # fill in email
+        twemail = self.auto.try_find('//input')
+        twemail.send_keys(acc['tw_email'])
+        self.auto.click('//span[text()="Next"]', 7)
+
+        twpass_or_username = self.auto.try_finds('//input')
+        twpass_or_username[1].send_keys(acc['tw_pass'])
+        self.auto.click('//span[text()="Log in"]', 3)
+
+        self.auto.click('//span[text()="Next"]', 2)
+
+        input_totp = self.auto.try_find('//input')
+        input_totp.send_keys(utils.totp(acc['tw_fa']))
+        self.auto.try_click("//span[contains(text(), 'Next')]", 3)
+        self.auto.try_click("//span[contains(text(), 'Skip for')]", 3)
+
+        self.auto.switch_to_window(0)
+        time.sleep(3)
+        logger.info(f"Login twitter for account: {acc['tw_email']}")
+
     def login_discord(self, account: dict) -> None:
         url = "https://discord.com/login"
         self.driver.execute_script("window.open('');")
@@ -93,6 +122,28 @@ class BaseAuto(object):
         twemail[0].send_keys(account['dis_email'])
         twemail[1].send_keys(account['dis_pass'])
         self.auto.click('//div[text()="Log In"]', 8)
+        self.auto.switch_to_window(0)
+        logger.info(f"Login discord for account: {account['dis_email']}")
+
+    def login_discord_token(self, account: dict) -> None:
+        token = account['dis_token']
+        url = "https://discord.com/login"
+        self.driver.execute_script("window.open('');")
+        time.sleep(5)  # wait for the new window to open
+        self.auto.switch_to_window(-1)
+        self.driver.get(url)
+        script = """
+                function login(token) {
+                setInterval(() => {
+                document.body.appendChild(document.createElement `iframe`).contentWindow.localStorage.token = `"${token}"`
+                }, 50);
+                setTimeout(() => {
+                location.reload();
+                }, 2500);
+                }   
+                """
+        self.driver.execute_script(script + f'\nlogin("{token}")')
+        time.sleep(5)
         self.auto.switch_to_window(0)
         logger.info(f"Login discord for account: {account['dis_email']}")
 

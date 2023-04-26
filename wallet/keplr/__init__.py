@@ -29,7 +29,7 @@ def launchSeleniumWebdriver() -> webdriver:
         "extensions.ui.developer_mode": True,
     }
     options.add_experimental_option("prefs", prefs)
-
+    options.add_experimental_option("detach", True)
     # add headless option
     if utils.force2bool(HEADLESS):
         logger.info('headless mode')
@@ -169,6 +169,7 @@ def switch_to_window(window_number):
     # Switch to another window, start from 0.
     try:
         wh = driver.window_handles
+        logger.info(f'window handles: {wh}')
         driver.switch_to.window(wh[window_number])
     except:
         pass

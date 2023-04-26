@@ -1,13 +1,10 @@
 import time
 from selenium.webdriver.common.by import By
 
-from wallet import keplr
 from wallet import leap
 from app.account import AccountLoader
-from app.base import KeplrAuto
 from app.base import LeapAuto
-from app.config import get_logger
-
+from app.config import get_logger, ACC_SEI_PATH
 
 logger = get_logger(__name__)
 
@@ -55,44 +52,49 @@ class Blocked(LeapAuto):
         self.auto.walletSetup(account['seed_phrase'], account['password'])
 
         time.sleep(5)
-        self.auto.click("//h1[contains(text(), 'Sei')]", 2)
-        self.login_twitter(account)
+        self.auto.try_click("//h1[contains(text(), 'Sei')]", 2)
+        self.login_twitter_token(account)
         time.sleep(5)
-        self.auto.click("//h1[contains(text(), 'Sei')]", 2)
-        self.login_discord(account)
+        self.auto.try_click("//h1[contains(text(), 'Sei')]", 2)
+        self.login_discord_token(account)
         self.driver.get(url)
         time.sleep(5)
         logger.info(f"Done incentive for blocked account {account['dis_email']}")
 
     def _try_signup(self, account):
         try:
-            self.auto.click("//button[contains(text(), 'Sign up')]")
+            self.auto.click("//button[contains(text(), 'Sign up')]", 2)
             email_input = self.auto.try_find(":r0:", By.ID)
             email_input.send_keys(account['dis_email'])
             username_input = self.auto.try_find(":r1:", By.ID)
             username_input.send_keys(account['dis_email'].split('@')[0])
             password_input = self.auto.try_find(":r2:", By.ID)
-            password_input.send_keys(account['dis_pass'])
-            self.auto.click("//button[contains(text(), 'Sign up')]", 8)
+            password_input.send_keys(account['password'])
+            time.sleep(1)
+            signup_btns = self.auto.try_finds("//button[contains(text(), 'Sign up')]")
+            signup_btns[-1].click()
         except Exception as _e:
-            pass
+            logger.error(_e)
 
     def _try_login(self, account):
         try:
+            time.sleep(2)
             self.auto.click("//button[contains(text(), 'Sign in')]")
             email_input = self.auto.try_find(":r0:", By.ID)
             email_input.send_keys(account['dis_email'])
             password_input = self.auto.try_find(":r1:", By.ID)
-            password_input.send_keys(account['dis_pass'])
-            self.auto.click("//button[contains(text(), 'Log in')]")
+            password_input.send_keys(account['password'])
+            time.sleep(1)
+            self.auto.click("//button[contains(text(), 'Log in')]", 2)
         except Exception as _e:
-            pass
+            logger.error(_e)
 
 
 if __name__ == '__main__':
-    list_account = AccountLoader().parser_file()
+    # list_account = AccountLoader().parser_file()
+    list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
     swap_params = {
-        "account": list_account[4]
+        "account": list_account[2]
     }
     try:
         Blocked().faucet(**swap_params)

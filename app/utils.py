@@ -1,3 +1,4 @@
+import base64
 import csv
 import json
 import openpyxl
@@ -5,6 +6,9 @@ import os
 import pandas as pd
 import random
 import string
+
+import hmac
+import time
 
 from app.config import HOME_PACKAGE, HOME_TMP
 
@@ -114,24 +118,17 @@ def find_latest_row_index_log(file_report) -> tuple:
     return index, row
 
 
-def refresh_ipadress():
-    # Define the range of the IP address to choose from
-    ip_range = ["192.168.1.", "10.0.0."]
-
-    # Choose a random IP address
-    new_ip = ip_range[random.randint(0, len(ip_range) - 1)] + str(random.randint(1, 254))
-
-    # Define the subnet mask
-    subnet_mask = "255.255.255.0"
-
-    # Get the name of the current active network interface
-    interface_name = os.popen(
-        "networksetup -listallhardwareports | awk '/Wi-Fi|AirPort/{getline; print $2}'").read().strip()
-
-    # Change the IP address and subnet mask using the networksetup command
-    cmd = "sudo networksetup -setmanual \"" + interface_name + "\" " + new_ip + " " + subnet_mask
-    print(cmd)
-    os.system(cmd)
+def totp(secret: str):
+    """ Calculate TOTP using time and key """
+    key = base64.b32decode(secret, True)
+    now = int(time.time() // 30)
+    msg = now.to_bytes(8, "big")
+    digest = hmac.new(key, msg, "sha1").digest()
+    offset = digest[19] & 0xF
+    code = digest[offset : offset + 4]
+    code = int.from_bytes(code, "big") & 0x7FFFFFFF
+    code = code % 1000000
+    return "{:06d}".format(code)
 
 
 def df_to_csv(df, file_path):
