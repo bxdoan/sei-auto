@@ -53,10 +53,10 @@ class Blocked(LeapAuto):
 
         time.sleep(5)
         self.auto.try_click("//h1[contains(text(), 'Sei')]", 2)
-        self.login_twitter_token(account)
+        self.login_twitter(account)
         time.sleep(5)
         self.auto.try_click("//h1[contains(text(), 'Sei')]", 2)
-        self.login_discord_token(account)
+        self.login_discord(account)
         self.driver.get(url)
         time.sleep(5)
         logger.info(f"Done incentive for blocked account {account['dis_email']}")
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # list_account = AccountLoader().parser_file()
     list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
     swap_params = {
-        "account": list_account[2]
+        "account": list_account[5]
     }
     try:
         Blocked().faucet(**swap_params)

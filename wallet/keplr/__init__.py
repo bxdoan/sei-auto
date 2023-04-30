@@ -27,6 +27,8 @@ def launchSeleniumWebdriver() -> webdriver:
     options.add_argument(f"--load-extension={EXTENSION_DIR},{EXTENSION_DIR_LEAP}")
     prefs = {
         "extensions.ui.developer_mode": True,
+        "credentials_enable_service": False,
+        "profile.password_manager_enabled": False,
     }
     options.add_experimental_option("prefs", prefs)
     options.add_experimental_option("detach", True)

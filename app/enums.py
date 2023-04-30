@@ -60,9 +60,10 @@ COLUMN_MAPPING = {
     "Balance": 'balance',
     "TWEMAIL": 'tw_email',
     "TWPASS": 'tw_pass',
+    "TWACC": 'tw_acc',
+    "TWFA": 'tw_fa',
     "DISEMAIL": 'dis_email',
     "DISPASS": 'dis_pass',
-    "TWFA": 'tw_fa',
     "DISTOKEN": 'dis_token',
     'Description': 'description',
 }
