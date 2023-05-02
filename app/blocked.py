@@ -14,11 +14,6 @@ CONFIG = {
     "mainnet": {
         "url": "https://app.sparrowswap.xyz",
         "token": {
-            "FRAX": "0x9b4e2c47e57d1331e6398cf605cbe895b4f93a87",
-            "USDC": "0x67ae69fd63b4fc8809adc224a9b82be976039509",
-            "ETH": "0x000000000000000000000000000000000000800a",
-            "ETH2": "0x5300000000000000000000000000000000000004",
-            "MKR": "0xbec22541ca80c4aec9baf6dee8880ee3c1bb612b",
         }
     },
     "test": {
@@ -73,6 +68,7 @@ class Blocked(LeapAuto):
             time.sleep(1)
             signup_btns = self.auto.try_finds("//button[contains(text(), 'Sign up')]")
             signup_btns[-1].click()
+            time.sleep(3)
         except Exception as _e:
             logger.error(_e)
 
@@ -94,7 +90,7 @@ if __name__ == '__main__':
     # list_account = AccountLoader().parser_file()
     list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
     swap_params = {
-        "account": list_account[5]
+        "account": list_account[12]
     }
     try:
         Blocked().faucet(**swap_params)
