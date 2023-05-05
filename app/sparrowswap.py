@@ -67,7 +67,7 @@ class Sparrows(KeplrAuto):
         # click on the keplr wallet button
         portal = self.driver.find_element(By.CSS_SELECTOR, "sparrowblocks-portal")
         keplr_wallet = portal.find_elements(By.CSS_SELECTOR, "button")
-        keplr_wallet[1].click()
+        keplr_wallet[-1].click()
 
         keplr.approve()
 
@@ -310,19 +310,19 @@ class Sparrows(KeplrAuto):
 if __name__ == '__main__':
     list_account = AccountLoader().parser_file()
     swap_params = {
-        "account": list_account[2]
+        "account": list_account[1]
     }
     params = {
         # "percent": "1/2",
-        "amount": "1",
-        "from_token": "RUM",
-        "to_token": "SEI",
+        "amount": "0,1",
+        "from_token": "SEI",
+        "to_token": "USDT",
         "pair": "SEI",
     }
     try:
         # Sparrows(params=params).incentive(**swap_params)
-        Sparrows(params=params).swap(**swap_params)
+        # Sparrows(params=params).swap(**swap_params)
         # Sparrows(params={"pair": "SEIRUM"}).addLiquidity(**swap_params)
-        # Sparrows(params=params).process_all(method='incentive')
+        Sparrows(params=params).process_all(method='swap')
     except Exception as e:
         logger.error(e)
