@@ -72,7 +72,8 @@ class BaseAuto(object):
             self.auto.try_click('//span[text()="Next"]', 3)
 
             input_totp = self.auto.try_find('//input')
-            input_totp.send_keys(utils.totp(acc['tw_fa']))
+            otp = utils.totp(acc['tw_fa'])
+            input_totp.send_keys(otp)
             self.auto.try_click("//span[contains(text(), 'Next')]", 5)
             self.auto.try_click("//span[contains(text(), 'Skip for')]", 3)
         else:

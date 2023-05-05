@@ -39,8 +39,8 @@ class Blocked(LeapAuto):
         # close wellcome popup
         leap.switch_to_window(0)
 
-        self._try_signup(account)
-        self.driver.refresh()
+        # self._try_signup(account)
+        # self.driver.refresh()
         self._try_login(account)
 
         # setup metamask with seed phrase and password
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     # list_account = AccountLoader().parser_file()
     list_account = AccountLoader(fp=ACC_SEI_PATH).parser_file()
     swap_params = {
-        "account": list_account[12]
+        "account": list_account[0]
     }
     try:
         Blocked().faucet(**swap_params)

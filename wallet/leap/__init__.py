@@ -131,54 +131,6 @@ def switch_to_window(window_number):
     logger.info(f'switched to window numer: {str(window_number)}')
 
 
-def process_acc(idx):
-    mnemonic = ''
-    try:
-        click("//button[text()='Create new account']")
-
-        mnemonic = driver.find_element(By.XPATH, "//*[@id='app']/div/div[3]/div/form/div[1]").text
-
-        insert_text("//input[@name='name']", f"don{idx}")
-
-        insert_text("//input[@name='password']", PASSWORD)
-        insert_text("//input[@name='confirmPassword']", PASSWORD)
-
-        click("//button[text()='Next']")
-
-        # create mnemonic
-        list_mnemonic = mnemonic.split(' ')
-        for btn_test in list_mnemonic:
-            click(f"//button[text()='{btn_test}']", 0.1)
-
-        click("//button[text()='Register']")
-        click("//button[text()='Done']")
-    except:
-        pass
-    return mnemonic
-
-
-def get_address():
-    addr = ''
-    try:
-        # get address
-        driver.execute_script("window.open('');")
-        time.sleep(2)
-        switch_to_window(1)
-        driver.get(f"{EXT_URL}")
-        time.sleep(2)
-        click(f'//*[@id="app"]/div/div[1]/div[2]/div/div[2]/div/div[1]', 2)
-
-        click(f"//div[text()='{CHAIN_NAME}']", 2)
-
-        addr = driver.find_element(By.CLASS_NAME, 'address-tooltip').text
-        driver.close()
-        switch_to_window(0)
-        time.sleep(5)
-    except:
-        pass
-    return addr
-
-
 def approve(gas=GasPrice.Average):
     time.sleep(3)
     switch_to_window(-1)
@@ -202,44 +154,3 @@ def reject():
     except:
         pass
 
-
-def create_account(index):
-    mns = pd.DataFrame(columns=["Name", "Address", "Private Key", "Seed Phrase",
-                                "Password", "Status"])
-    driver.get("https://app.seinetwork.io/faucet")
-    driver.execute_script("window.open('');")
-    time.sleep(5)
-    switch_to_window(1)
-    driver.get(f"{EXT_URL}#/register")
-    mn = process_acc(index)
-    switch_to_window(0)
-    time.sleep(5)
-
-    click("//button[text()='connect wallet']", 3)
-
-    click("//p[text()='keplr']", 3)
-
-    switch_to_window(-1)
-
-    approve()
-    switch_to_window(0)
-
-    addr = get_address()
-
-    row = [f"", addr, "", mn, PASSWORD, '']
-    mns.loc[len(mns)] = row
-    utils.add_to_csv(FILE_NAME, mns.loc[i])
-
-    driver.quit()
-
-    logger.info(f"Create account success")
-
-
-if __name__ == '__main__':
-    for i in range(0, 1):
-        driver = launchSeleniumWebdriver()
-        try:
-            create_account(index=i)
-        except Exception as e:
-            logger.info(e)
-            driver.quit()
