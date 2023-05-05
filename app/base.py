@@ -170,6 +170,7 @@ class BaseAuto(object):
 
         logger.info(f'Request Success for account len: {len(list_account)}')
         logger.info(f"file report: {self.file_report}")
+        self.driver.quit()
 
     def swap(self, account: dict = None):
         pass

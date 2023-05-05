@@ -33,6 +33,7 @@ def launchSeleniumWebdriver() -> webdriver:
         "profile.password_manager_enabled": False,
     }
     options.add_experimental_option("prefs", prefs)
+    options.add_experimental_option("detach", True)
 
     # add headless option
     if utils.force2bool(HEADLESS):
@@ -40,7 +41,7 @@ def launchSeleniumWebdriver() -> webdriver:
         options.add_argument('--headless')
 
     global driver
-    driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
+    driver = uc.Chrome(options=options)
 
     if WIDTH:
         driver.set_window_size(WIDTH, 1020)

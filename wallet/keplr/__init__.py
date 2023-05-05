@@ -24,22 +24,26 @@ FILE_NAME = f"{CODE_HOME}/account.sei.csv"
 
 def launchSeleniumWebdriver() -> webdriver:
     options = uc.ChromeOptions()
-    options.add_argument(f"--load-extension={EXTENSION_DIR},{EXTENSION_DIR_LEAP}")
+    options.add_argument(f"--load-extension={EXTENSION_DIR_LEAP},{EXTENSION_DIR}")
     prefs = {
         "extensions.ui.developer_mode": True,
         "credentials_enable_service": False,
         "profile.password_manager_enabled": False,
     }
     options.add_experimental_option("prefs", prefs)
-    options.add_experimental_option("detach", True)
+    # options.add_experimental_option("detach", True)
+    # options.set_capability("detach", True)
     # add headless option
     if utils.force2bool(HEADLESS):
         logger.info('headless mode')
         options.add_argument('--headless')
 
     global driver
-    driver = uc.Chrome(options=options, executable_path=DRIVER_PATH)
-    driver.set_window_size(WIDTH, HEIGHT)
+    driver = uc.Chrome(options=options)
+    if WIDTH:
+        driver.set_window_size(WIDTH, 1020)
+    else:
+        driver.set_window_size(1300, 1020)
     logger.info(f"Extension has been loaded successfully ")
     time.sleep(5)
     driver.refresh()
