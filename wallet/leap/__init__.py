@@ -33,7 +33,6 @@ def launchSeleniumWebdriver() -> webdriver:
         "profile.password_manager_enabled": False,
     }
     options.add_experimental_option("prefs", prefs)
-    options.add_experimental_option("detach", True)
 
     # add headless option
     if utils.force2bool(HEADLESS):
