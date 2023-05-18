@@ -28,9 +28,9 @@ ACC_SEI = ACC_SEI_PATH.split('/')[-1].replace('.csv', '')
 WAIT_TIME = os.environ.get('WAIT_TIME')
 PASSWORD = os.environ.get('PASSWORD')  # password default for all accounts
 
-HEADLESS = os.environ.get('HEADLESS')     # for headless mode chrome
-WIDTH    = os.environ.get('WIDTH', 1300)  # for which width of chrome
-HEIGHT   = os.environ.get('HEIGHT', 1020) # for which height of chrome
+HEADLESS = os.environ.get('HEADLESS')      # for headless mode chrome
+WIDTH    = os.environ.get('WIDTH', 1300)   # for which width of chrome
+HEIGHT   = os.environ.get('HEIGHT', 1020)  # for which height of chrome
 
 # download the newest version of keplr extension from:
 # ref. https://chrome.google.com/webstore/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap
@@ -39,9 +39,20 @@ HEIGHT   = os.environ.get('HEIGHT', 1020) # for which height of chrome
 # /Users/$USER/Library/Application\ Support/Google/Chrome/Default/Extensions/
 EXTENSION_DIR      = os.environ.get('EXTENSION_DIR')
 EXTENSION_ID_KEPLR = os.environ.get('EXTENSION_ID_KEPLR')
+
 EXTENSION_DIR_LEAP = os.environ.get('EXTENSION_DIR_LEAP')
 EXTENSION_ID_LEAP  = os.environ.get('EXTENSION_ID_LEAP')
+
 DRIVER_PATH        = os.environ.get('DRIVER_PATH')
+
+# usefull extension, add more if you want
+HEKT_CAPTCHA       = os.environ.get('HEKT_CAPTCHA')
+DISCORD_LOGIN      = os.environ.get('DISCORD_LOGIN')
+
+DEFAULT_EXTENSION = f"{EXTENSION_DIR}"
+for ex in [HEKT_CAPTCHA, DISCORD_LOGIN]:
+    if ex:
+        DEFAULT_EXTENSION += f",{ex}"
 
 
 def get_logger(name):

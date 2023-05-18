@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 
 from wallet import leap
 from app.account import AccountLoader
-from app.base import LeapAuto
+from app.base import LeapAuto, KeplrAuto
 from app.config import get_logger, ACC_SEI_PATH
 
 logger = get_logger(__name__)
@@ -22,7 +22,7 @@ CONFIG = {
 }
 
 
-class Blocked(LeapAuto):
+class Blocked(KeplrAuto):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -31,21 +31,25 @@ class Blocked(LeapAuto):
 
     def faucet(self, account: dict = None):
 
-        leap.switch_to_window(0)
+        self.auto.switch_to_window(0)
         time.sleep(3)
         url = f"{self.config['url']}"
         self.driver.get(url)
         time.sleep(5)
         # close wellcome popup
-        leap.switch_to_window(0)
+        self.auto.switch_to_window(0)
 
         # self._try_signup(account)
         # self.driver.refresh()
         self._try_login(account)
 
         # setup metamask with seed phrase and password
+        self.auto.switch_to_window(0)
         self.auto.walletSetup(account['seed_phrase'], account['password'])
+        self.auto.switch_to_window(0)
+        self.auto.walletSetupLeap(account['seed_phrase'], account['password'])
 
+        self.driver.get(url)
         time.sleep(5)
         self.auto.try_click("//h1[contains(text(), 'Sei')]", 2)
         self.login_twitter(account)

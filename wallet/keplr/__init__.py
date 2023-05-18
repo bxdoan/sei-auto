@@ -8,7 +8,7 @@ import undetected_chromedriver as uc
 
 from app import utils
 from app.config import get_logger, PASSWORD, CODE_HOME, WIDTH, HEADLESS, EXTENSION_ID_KEPLR, \
-    EXTENSION_DIR, EXTENSION_DIR_LEAP, DRIVER_PATH, HEIGHT
+    EXTENSION_DIR, EXTENSION_DIR_LEAP, DEFAULT_EXTENSION, EXTENSION_ID_LEAP
 
 logger = get_logger(__name__)
 
@@ -17,6 +17,7 @@ logger = get_logger(__name__)
 # or from  https://github.com/chainapsis/keplr-wallet
 EXTENSION_ID = EXTENSION_ID_KEPLR or 'npdbcbhdknmoephofajnekpbocjpphdd'
 EXT_URL = f"chrome-extension://{EXTENSION_ID}/popup.html"
+EXT_LEAP_URL = f"chrome-extension://{EXTENSION_ID_LEAP}/index.html"
 CHAIN_ID = 'atlantic-2'
 CHAIN_NAME = f'Sei {CHAIN_ID}'
 FILE_NAME = f"{CODE_HOME}/account.sei.csv"
@@ -24,7 +25,9 @@ FILE_NAME = f"{CODE_HOME}/account.sei.csv"
 
 def launchSeleniumWebdriver() -> webdriver:
     options = uc.ChromeOptions()
-    options.add_argument(f"--load-extension={EXTENSION_DIR_LEAP},{EXTENSION_DIR}")
+
+    options.add_argument(f"--load-extension={DEFAULT_EXTENSION},{EXTENSION_DIR_LEAP}")
+
     prefs = {
         "extensions.ui.developer_mode": True,
         "credentials_enable_service": False,
@@ -91,6 +94,34 @@ def walletSetup(recoveryPhrase : 'str', password : str) -> None:
 
     click('//button[text()="Done"]', 5)
 
+    switch_to_window(0)
+    time.sleep(2)
+
+
+def walletSetupLeap(recoveryPhrase : 'str', password : str) -> None:
+    driver.execute_script("window.open('');")
+    time.sleep(5)  # wait for the new window to open
+    switch_to_window(-1)
+    driver.get(f"{EXT_LEAP_URL}")
+    time.sleep(2)
+    switch_to_window(-1)
+    time.sleep(2)
+    click("//div[contains(text(), 'Keplr')]", 5)
+
+    # fill in recovery seed phrase
+    seed_phrase_input = try_find('//textarea')
+    seed_phrase_input.send_keys(recoveryPhrase)
+
+    click("//div[contains(text(), 'Import Wallet')]", 2)
+    click("//*[@id='root']/div/div[2]/div/div[1]/div[2]/div[1]/div[1]/div[2]", 2)
+    click("//div[contains(text(), 'Proceed')]", 2)
+
+    inputs = try_finds('//input')
+    inputs[0].send_keys(password)
+    inputs[1].send_keys(password)
+    click("//div[contains(text(), 'Proceed')]", 3)
+    time.sleep(4)
+    driver.close()
     switch_to_window(0)
     time.sleep(2)
 
